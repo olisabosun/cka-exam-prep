@@ -14,6 +14,7 @@ This repository contains comprehensive study notes and practical examples for th
 | [4.Quality of Service.md](4.Quality%20of%20Service.md) | Resource Management | QoS classes (BestEffort, Burstable, Guaranteed) and resource limits/requests |
 | [5.Kubectl create vs apply.md](5.Kubectl%20create%20vs%20apply.md) | kubectl Commands | Difference between imperative and declarative resource management |
 | [6.Deployments Part 1.md](6.Deployments%20Part%201.md) | Deployments | Deployment concepts, ReplicaSets, services, scaling, and self-healing |
+| [7.Horizontal Pod Autoscaling.md](7.Horizontal%20Pod%20Autoscaling.md) | Auto-scaling | HPA configuration, metrics server setup, load testing, and scaling policies |
 
 ### Additional Resources
 
@@ -39,7 +40,7 @@ This repository contains comprehensive study notes and practical examples for th
    cd cka-exam-prep
    ```
 
-2. **Follow the numbered sequence** of study materials (1-6) for progressive learning
+2. **Follow the numbered sequence** of study materials (1-7) for progressive learning
 
 3. **Practice hands-on** with the provided YAML examples and commands
 
