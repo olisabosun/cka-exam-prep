@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: apache
+  labels:
+    app: apache
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: apache
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+      - name: nginx
+        image: httpd:latest
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 200m
+            memory: 200Mi 
+          requests: 
+            cpu: 100m
+            memory: 100Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apache-deployment-svc
+spec:
+  selector:
+    app: apache
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+

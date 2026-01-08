@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: store-front
+  labels:
+    name: httpd
+    managed-by: devops
+    component: frontend
+    version: "6.3"
+    part-of: store
+    instance: jan2024
+    client: xyz
+    env: prod  
+spec:
+  containers:
+  - name: checkers
+    image: nginx:latest
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: store-back
+  labels:
+    name: redis
+    managed-by: db
+    component: backend
+    version: "5"
+    part-of: store
+    instance: jan2021
+    client: xyz
+    env: test
+spec:
+  containers:
+  - name: checkers
+    image: redis
+

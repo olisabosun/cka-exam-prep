@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: employee-front
+  labels:
+    name: apache
+    managed-by: sre
+    component: frontend
+    version: "5"
+    part-of: employee
+    instance: jan2024
+    client: xyz
+    env: prod  
+spec:
+  containers:
+  - name: checkers
+    image: nginx:latest
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: employee-back
+  labels:
+    name: redis
+    managed-by: sre
+    component: backend
+    version: "5"
+    part-of: employee
+    instance: jan2021
+    client: xyz
+    env: dev
+spec:
+  containers:
+  - name: checkers
+    image: redis
+

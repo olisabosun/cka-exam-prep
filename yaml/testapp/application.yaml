@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-deploy-v1
+  annotations:
+    kubernetes.io/change-cause: "version 1  jan 2026"
+spec:
+  revisionHistoryLimit: 5
+  replicas: 10
+  selector:
+     matchLabels:
+        app: hello-world
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: hello-world
+    spec:
+      containers:
+      - name: hello-pod
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 100Mi
+
+# kubectl set image deploy/hello-deploy hello-pod=lovelearnlinux/webserver:v2 --annotation=update image from v1 to v2
+# kubectl annotate deployments.apps hello-deploy kubernetes.io/change-cause="image changed to nginx:latest"
+# kubectl rollout history deployment hello-deploy --revision 5
+
+
+
+
+
+
+
+

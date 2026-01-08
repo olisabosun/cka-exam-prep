@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: guaranteed
+  labels:
+    name: nginx  
+spec:
+  containers:
+  - name: checkers
+    image: nginx:1.14.2
+    ports:
+    - containerPort: 80
+    resources:
+      limits:
+        cpu: 200m
+        memory: 200Mi
+      requests:
+        cpu: 200m 
+        memory: 200Mi     
+

@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bookshelf-front
+  labels:
+    name: nginx
+    managed-by: devops
+    component: frontend
+    version: "10"
+    part-of: bookshelf
+    instance: may2023
+    client: abc
+    env: prod  
+spec:
+  containers:
+  - name: checkers
+    image: nginx:latest
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bookshelf-back
+  labels:
+    name: redis
+    managed-by: dbteam
+    component: backend
+    version: "5"
+    part-of: bookshelf
+    instance: nov2024
+    client: abc
+    env: prod
+spec:
+  containers:
+  - name: checkers
+    image: redis
+
