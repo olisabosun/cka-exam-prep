@@ -8,19 +8,19 @@ This repository contains comprehensive study notes and practical examples for th
 
 | File | Topic | Description |
 |------|-------|-------------|
-| [1.Install and Create Cluster.md](1.Install%20and%20Create%20Cluster.md) | Cluster Setup | Complete guide for installing and creating Kubernetes clusters using kubeadm with CRI-O |
-| [2.Exploring CLuster, Containers vs Pods.md](2.Exploring%20CLuster,%20Containers%20vs%20Pods.md) | Cluster Exploration | Node configuration, kubectl autocomplete, labels, annotations, and container vs pod concepts |
-| [3.Create Pods Declaratively.md](3.Create%20Pods%20Declaratively.md) | Pod Management | Declarative pod creation, environment variables, labels, and label selectors |
-| [4.Quality of Service.md](4.Quality%20of%20Service.md) | Resource Management | QoS classes (BestEffort, Burstable, Guaranteed) and resource limits/requests |
-| [5.Kubectl create vs apply.md](5.Kubectl%20create%20vs%20apply.md) | kubectl Commands | Difference between imperative and declarative resource management |
-| [6.Deployments Part 1.md](6.Deployments%20Part%201.md) | Deployments | Deployment concepts, ReplicaSets, services, scaling, and self-healing |
-| [7.Horizontal Pod Autoscaling.md](7.Horizontal%20Pod%20Autoscaling.md) | Auto-scaling | HPA configuration, metrics server setup, load testing, and scaling policies |
+| [1.Install and Create Cluster.md](notes/1.Install%20and%20Create%20Cluster.md) | Cluster Setup | Complete guide for installing and creating Kubernetes clusters using kubeadm with CRI-O |
+| [2.Exploring CLuster, Containers vs Pods.md](notes/2.Exploring%20CLuster,%20Containers%20vs%20Pods.md) | Cluster Exploration | Node configuration, kubectl autocomplete, labels, annotations, and container vs pod concepts |
+| [3.Create Pods Declaratively.md](notes/3.Create%20Pods%20Declaratively.md) | Pod Management | Declarative pod creation, environment variables, labels, and label selectors |
+| [4.Quality of Service.md](notes/4.Quality%20of%20Service.md) | Resource Management | QoS classes (BestEffort, Burstable, Guaranteed) and resource limits/requests |
+| [5.Kubectl create vs apply.md](notes/5.Kubectl%20create%20vs%20apply.md) | kubectl Commands | Difference between imperative and declarative resource management |
+| [6.Deployments Part 1.md](notes/6.Deployments%20Part%201.md) | Deployments | Deployment concepts, ReplicaSets, services, scaling, and self-healing |
+| [7.Horizontal Pod Autoscaling.md](notes/7.Horizontal%20Pod%20Autoscaling.md) | Auto-scaling | HPA configuration, metrics server setup, load testing, and scaling policies |
+| [8.Deployment strategies.md](notes/8.Deployment%20strategies.md) | Deployment Strategies | Rolling updates, blue-green, canary deployments and rollback strategies |
 
 ### Additional Resources
 
-- **Resources/**: Supplementary materials and references
-- **YAML Examples/**: Practical configuration files for various Kubernetes resources
-- **Screenshots/**: Visual aids and diagrams for better understanding
+- **images/**: Screenshots and visual aids including YAML code examples
+- **resources/**: Supplementary materials, links, and references
 
 ## 🎯 CKA Exam Topics Covered
 
@@ -44,7 +44,7 @@ This repository contains comprehensive study notes and practical examples for th
 
 3. **Practice hands-on** with the provided YAML examples and commands
 
-4. **Use the screenshots** as visual references for complex concepts
+4. **Use the images/** folder for visual references and YAML code examples
 
 ## 📋 Prerequisites
 
