@@ -1,0 +1,1040 @@
+Sample YAML for K8s docs : 
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: test-network-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      role: db
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 172.17.0.0/16
+        except:
+        - 172.17.1.0/24
+    - namespaceSelector:
+        matchLabels:
+          project: myproject
+    - podSelector:
+        matchLabels:
+          role: frontend
+    ports:
+    - protocol: TCP
+      port: 6379
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/24
+    ports:
+    - protocol: TCP
+      port: 5978
+
+
+
+Ingress - incoming traffic
+Egress - outgoing traffic
+{} - means all pods
+	- OR
+	AND
+
+793  cd yaml/
+  794  ls -lrt
+  795  vim mypod.yaml
+  796  kubectl -n dev apply -f mypod.yaml 
+  797  vim mypod.yaml
+  798  kubectl -n prod apply -f mypod.yaml 
+  799  vim mypod.yaml
+  800  kubectl -n test apply -f mypod.yaml 
+  801  kubectl -n dev get pods
+  802  kubectl -n test get pods
+  803  kubectl -n test get pods --show-labels
+  804  kubectl -n prod get pods --show-labels
+  805  kubectl -n prod get pods -o wide
+  806  kubectl -n dev exec -- curl http://172.17.235.138
+  807  kubectl -n dev exec devone -- curl http://172.17.235.138
+  808  kubectl -n dev exec devone -- curl http://172.17.189.76
+  809  kubectl -n dev exec testone -- curl http://172.17.189.76
+  810  kubectl -n test exec testone -- curl http://172.17.189.76
+  811  kubectl -n prod exec prodone -- curl http://172.17.189.76
+  812  vim prod-network-policy.yaml
+  813  kubectl get ns --show-labels
+  814  vim prod-network-policy.yaml
+  815  kubectl apply -f prod-network-policy.yaml 
+  816  kubectl -n prod describe networkpolicy.networking.k8s.io/prod-network-policy
+  817  kubectl -n get pods -o wide
+  818  kubectl -n prod get pods -o wide
+  819  kubectl -n dev devone -- curl http:172.17.235.138
+  820  kubectl -n dev devone exec -- curl http:172.17.235.138
+  821  kubectl -n dev exec devone -- curl http:172.17.235.138
+  822  kubectl -n dev exec devone -- curl http:172.17.189.76
+  823  kubectl -n dev exec devone -- curl http:172.17.189.138
+  824  kubectl -n dev exec devone -- curl http://172.17.189.138
+  825  kubectl -n dev exec devone -- curl http://172.17.189.76
+  826  kubectl -n dev exec devone -- curl http://172.17.235.138
+  827  kubectl -n test exec testone -- curl http://172.17.235.138
+  828  kubectl -n test exec testone -- curl http://172.17.189.76
+  829  vim prod-network-policy.yaml 
+  830  kubectl apply -f prod-network-policy.yaml 
+  831  kubectl -n prog get networkpolicy
+  832  kubectl -n prod get networkpolicy
+  833  kubectl -n prod describe networkpolicy.networking.k8s.io/prod-network-policy
+  834  kubectl -n test exec testone -- curl http://172.17.189.76
+  835  kubectl -n test exec testone -- curl http://172.17.235.138
+  836  kubectl -n dev exec devone -- curl http://172.17.235.138
+  837  kubectl -n dev exec devtwo -- curl http://172.17.235.138
+  838  vim prod-network-policy.yaml 
+  839  kubectl apply -f prod-network-policy.yaml 
+  840  kubectl -n prod describe networkpolicy.networking.k8s.io/prod-network-policy
+  841  kubectl -n dev exec devone -- curl http://172.17.235.138
+  842  kubectl -n dev exec devtwo -- curl http://172.17.235.138
+  843  kubectl -n dev exec devone -- curl http://172.17.235.138
+  844  kubectl -n test exec testone -- curl http://172.17.235.138
+  845  kubectl -n prod exec testone -- curl http://172.17.235.138
+  846  kubectl -n prod exec prodone -- curl http://172.17.235.138
+  847  kubectl -n dev exec devone -- curl http://172.17.235.138
+  848  kubectl delete -f prod-network-policy.yaml 
+
+Network policy to allow only one pod in dev to communicate with one pod in prod : 
+
+bosun@manager:~/yaml$ history
+    1  ip a s
+    2  sudo nc 127.0.0.1 6443
+    3  sudo nc 127.0.0.1 22
+    4  sudo swapoff -a
+    5  sudo swapon -a
+    6  sudo vim /etc/fstab 
+    7  sudo mount -a
+    8  sudo swapon -a
+    9  sudo swapoff -a
+   10  cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+   11  net.ipv4.ip_forward = 1
+   12  EOF
+   13  sudo sysctl --system
+   14  vim packages.sh
+   15  sudo sh packages.sh 
+   16  sudo crictl images
+   17  sudo kubeadm config images pull
+   18  sudo crictl images
+   19  sudo kubeadm init --apiserver-advertise-address 10.0.0.100 --pod-network-cidr 172.17.0.0/16
+   20  sudo apt update
+   21  sudo apt install -y     conntrack     socat     ebtables     ethtool     ipvsadm     iptables
+   22  sudo kubeadm init --apiserver-advertise-address 10.0.0.100 --pod-network-cidr 172.17.0.0/16
+   23  mkdir -p $HOME/.kube
+   24  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+   25  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+   26  vim calico.yaml
+   27  kubectl apply -f calico.yaml 
+   28  kubectl get nodes
+   29  kubectl get nodes -o wide
+   30  kubectl ns kube-system get pods
+   31  kubectl -n kube-system get pods
+   32  kubectl get nodes -o wide
+   33  scp packages.sh bosun@192.168.49.140
+   34  scp packages.sh bosun@192.168.49.140:
+   35  kubectl get nodes
+   36  kubectl -n kube-system get pods
+   37  kubectl get nodes
+   38  scp packages.sh bosun@192.168.49.142
+   39  scp packages.sh bosun@192.168.49.142:
+   40  kubectl get nodes
+   41  kubectl -n kube-system get pods
+   42  kubectl get nodes
+   43  kubectl -n kube-system get pods
+   44  kubectl source <(kubectl completion bash)
+   45  source <(kubectl completion bash)
+   46  echo "source <(kubectl completion bash)" >> ~/.bashrc
+   47  kubectl explain --help
+   48  kubectl explain pod
+   49  kubectl explain pod.spec.containers
+   50  kubectl get nodes -o wide
+   51  sudo vim /var/lib/kubelet/kubeadm-flags.env
+   52  sudo systemctl daemon-reload
+   53  sudo systemctl restart kubelet
+   54  kubectl get nodes -o wide
+   55  sudo vim /var/lib/kubelet/kubeadm-flags.env
+   56  kubectl describe node worker1
+   57  kubectl describe node manager
+   58  kubectl describe node worker1
+   59  kubectl describe node worker2
+   60  kubectl get nodes -o wide
+   61  kubectl run frontend --image=nginx
+   62  kubectl get pods
+   63  kubectl describe pod frontend
+   64  kubectl get pods
+   65  kubectl get nodes
+   66  kubectl get pods -o wide
+   67  curl 172.17.189.65
+   68  kubectl get pods -o wide
+   69  kubectl describe pod frontend
+   70  kubectl delete pod frontend
+   71  history
+   72  clear
+   73  mkdir yaml
+   74  cd yaml/
+   75  vim simple-pod.yaml
+   76  kubectl create -f simple-pod.yaml 
+   77  kubectl get pods
+   78  kubectl describe pod checkers
+   79  kubectl get pods
+   80  kubectl get pods webapp
+   81  kubectl describe pod webapp
+   82  kubectl get pods
+   83  kubectl describe pod webapp
+   84  exit
+   85  ip a s
+   86  kubectl get pods
+   87  kubectl describe pod webapp
+   88  kubectl get pods -o wide
+   89  curl 172.17.235.129
+   90  vim simple-pod.yaml
+   91  cd yaml/
+   92  vim simple-pod.yaml 
+   93  kubectl delete -f simple-pod.yaml 
+   94  kubectl get pods
+   95  vim simple-pod.yaml 
+   96  kubectl create -f simple-pod.yaml 
+   97  kubectl get pods
+   98  kubectl get pods -o wide
+   99  kubectl describe pod dbapp
+  100  vim simple-pod.yaml 
+  101  kubectl delete -f simple-pod.yaml
+  102  kubectl get pods -o wide
+  103  vim simple-pod.yaml 
+  104  kubectl create -f simple-pod.yaml 
+  105  kubectl get pods -o wide
+  106  vim simple-pod.yaml 
+  107  kubectl describe pod dbapp
+  108  kubectl delete -f simple-pod.yaml
+  109  vim simple-pod.yaml 
+  110  kubectl create -f simple-pod.yaml 
+  111  kubectl get pods -o wide
+  112  kubectl describe pod mysql
+  113  kubectl get pods -o wide
+  114  kubectl describe pod mysql
+  115  kubectl logs mysql
+  116  kubectl delete pod my-sql
+  117  kubectl get pods -o wide
+  118  kubectl delete pod my-sql
+  119  kubectl delete pod mysql
+  120  vim simple-pod.yaml 
+  121  cp simple-pod.yaml dbapp.yaml
+  122  ls -l
+  123  vim dbapp.yaml 
+  124  kubectl create -f dbapp.yaml 
+  125  kubectl get pods -o wide
+  126  vim dbapp.yaml 
+  127  cd /home/
+  128  vim .vimrc
+  129  sudo vim .vimrc
+  130  source .vimrc
+  131  vim dbapp.yaml 
+  132  pwd
+  133  ll
+  134  cd bosun/
+  135  ls -lrt
+  136  mv calico.yaml yaml/
+  137  mkdir scripts
+  138  mv packages.sh scripts/
+  139  ls -lrt
+  140  cd yaml/
+  141  ls -lrt
+  142  vim dbapp.yaml 
+  143  cd /home/
+  144  sudo source .vimrc
+  145  source .vimrc
+  146  cd bosun/yaml/
+  147  ls -l
+  148  vi dbapp.yaml 
+  149  kubectl get pods --show-labels
+  150  locate .vimrc
+  151  sudo apt install plocate
+  152  locate .vimrc
+  153  cd /home/
+  154  ls -a
+  155  ls -la
+  156  chmod 640 .vimrc 
+  157  sudo chmod 640 .vimrc 
+  158  ls -la
+  159  sudo chmod 750 .vimrc 
+  160  ls -la
+  161  sudo chmod 775 .vimrc 
+  162  ls -la
+  163  source .vimrc 
+  164  cd bosun/yaml/
+  165  ls -l
+  166  vim dbapp.yaml 
+  167  vim dbapp.yaml
+  168  kubectl get pods
+  169  vim dbapp.yaml
+  170  kubectl create -f dbapp.yaml 
+  171  vim dbapp.yaml
+  172  kubectl get pods
+  173  kubectl get pods -o wide
+  174  cp dbapp.yaml employee.yaml
+  175  vim employee.yaml 
+  176  kubectl create -f employee.yaml 
+  177  cp employee.yaml store.yaml
+  178  vim store.yaml 
+  179  kubectl create -f store.yaml 
+  180  kubectl get pods -o wide
+  181  clear
+  182  kubectl get pods -o wide
+  183  kubectl get pods --show-labels
+  184  kubectl get pods -L client -L env -L component
+  185  kubectl get pods -l "env=prod"
+  186  kubectl get pods -l "env=prod" -L env
+  187  kubectl get pods -l "env!=prod" -L env
+  188  ls -l
+  189  vim dbapp.yaml 
+  190  vim employee.yaml 
+  191  vim store.yaml 
+  192  ls -l
+  193  vim dbapp.yaml 
+  194  kubectl get pods -L client -L env -L component
+  195  kubectl get pods -l "env=prod, client=xyz" -L env -L client
+  196  kubectl get pods -l "env=prod, client!=xyz" -L env -L client
+  197  clear
+  198  kubectl get pods -l "env in (dev,test)" -L env
+  199  uptime
+  200  kubectl get pods -L
+  201  kubectl get pods "env=prod" 
+  202  kubectl get pods -L "env=prod" 
+  203  kubectl get pods -o wide
+  204  kubectl descibe node worker1
+  205  kubectl descibe nodes worker1
+  206  kubectl describe node worker1
+  207  kubectl describe pod mysql
+  208  clear
+  209  kubectl get pods
+  210  ls -lrt
+  211  vim simple-pod.yaml 
+  212  cp simple-pod.yaml burst.yaml
+  213  vim burst.yaml 
+  214  kubectl apply -f burst.yaml 
+  215  kubectl logs
+  216  kubectl logs webapp
+  217  kubectl logs -f webapp
+  218  kubectl get pods
+  219  kubectl delete pods -L "*" 
+  220  kubectl delete pods -L "env=prod" 
+  221  kubectl delete pods bookshelf-back 
+  222  kubectl delete pods bookshelf-front 
+  223  kubectl delete pods employee-back 
+  224  kubectl delete pods employee-front
+  225  kubectl delete pods mysql
+  226  kubectl delete pods store-front
+  227  kubectl get pods
+  228  kubectl delete pods store-back 
+  229  kubectl delete pods dbapp
+  230  kubectl get pods
+  231  ll
+  232  vim simple-pod.yaml 
+  233  kubectl apply -f simple-pod.yaml
+  234  kubectl get pods
+  235  vim burst.yaml 
+  236  kubectl apply -f burst.yaml 
+  237  kubectl get pods -o wide
+  238  kubectl describe pod burst
+  239  vim burst.yaml 
+  240  cp burst.yaml guaranteed.yaml
+  241  vim guaranteed.yaml 
+  242  clear
+  243  kubectl apply -f guaranteed.yaml 
+  244  kubectl describe pod guaranteed
+  245  vim guaranteed.yaml 
+  246  kubectl describe pod guaranteed
+  247  kubectl get pods -o wide
+  248  clear
+  249  kubectl top nodes
+  250  kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+  251  kubectl -n kube-system get pods
+  252  kubectl top nodes
+  253  kubectl delete https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+  254  kubectl delete -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+  255  kubectl -n kube-system get pods
+  256  kubectl delete -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+  257  kubectl get pods -o wide
+  258  kubectl get nodes -o wide
+  259  kubectl describe pods metrics-server-5dd7f7f59c-v2sxv
+  260  vim metric.yaml
+  261  ls -lrt
+  262  vim metric.yaml
+  263  kubectl get pods -o wide
+  264  kubectl delete -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+  265  kubectl get services
+  266  ls -lrt
+  267  kubectl delete deployment metrics-server -n kube-system
+  268  kubectl delete service metrics-server -n kube-system
+  269  kubectl delete serviceaccount metrics-server -n kube-system
+  270  kubectl delete clusterrole system:metrics-server
+  271  kubectl delete clusterrolebinding system:metrics-server
+  272  kubectl delete rolebinding metrics-server-auth-reader -n kube-system
+  273  kubectl delete apiservice v1beta1.metrics.k8s.io
+  274  ls -lrt
+  275  kubectl apply -f metric.yaml 
+  276  kubectl -n kube-system get pods
+  277  kubectl top nodes
+  278  kubectl top pods
+  279  vim stress.yamk
+  280  vim stress.yaml
+  281  kubectl apply -f stress.yaml 
+  282  vim stress.yaml
+  283  kubectl apply -f stress.yaml 
+  284  kubectl get pods -o wide
+  285  kubectl get pods 
+  286  kubectl delete -f stress.yaml 
+  287  kubectl get pods 
+  288  vim stress.yaml
+  289  kubectl apply -f stress.yaml
+  290  kubectl get pods 
+  291  kubectl describe pod stress
+  292  kubectl get pods 
+  293  kubectl top pods
+  294  kubectl delete -f stress.yaml 
+  295  kubectl get pods 
+  296  vim stress.yaml
+  297  kubectl apply -f stress.yaml 
+  298  kubectl get pods 
+  299  kubectl delete -f stress.yaml 
+  300  ls -lrt
+  301  kubectl get pods 
+  302  kubectl delete pods burst 
+  303  kubectl delete pods guaranteed
+  304  kubectl create namespace learning
+  305  kubectl create -f stress.yaml 
+  306  kubectl get pods 
+  307  vim stress.yaml 
+  308  kubectl delete pods stress
+  309  ll
+  310  rm -rf stress.yaml 
+  311  vim pod-with-memory-exceed.yml
+  312  kubectl create -f pod-with-memory-exceed.yml 
+  313  kubectl get pods
+  314  kubectl describe pod/nnappone --namespace=learning
+  315  kubectl get pods -o wide
+  316  kubectl delete pod/nnappone --namespace=learning
+  317  kubectl describe pod/nnappone --namespace=learning
+  318  kubectl get pods -o wide
+  319  kubectl get nodes
+  320  ll
+  321  vim mypod.yaml
+  322  kubectl get pods
+  323  vim mypod.yaml
+  324  kubectl apply -f mypod.yaml 
+  325  kubectl get pods
+  326  vim mypod.yaml
+  327  kubectl apply -f mypod.yaml
+  328  kubectl get pods --show-labels
+  329  kubectl label pod webapp client=abc
+  330  kubectl get pods --show-labels
+  331  kubectl delete pod webapp
+  332  kubectl get pods --show-labels
+  333  kubectl label pod webapp client=abc
+  334  kubectl get pods --show-labels
+  335  kubectl get pod webapp -o yaml
+  336  vim mypod.yaml
+  337  kubectl apply -f mypod.yaml
+  338  vim mypod.yaml
+  339  kubectl apply -f mypod.yaml
+  340  kubectl get pods --show-labels
+  341  kubectl delete pod nginx
+  342  kubectl get pods --show-labels
+  343  kubectl apply -f mypod.yaml
+  344  vim mypod.yaml
+  345  kubectl apply -f mypod.yaml
+  346  kubectl get pods --show-labels
+  347  kubectl label pod test client=abc
+  348  kubectl get pods --show-labels
+  349  sudo apt upgrade
+  350  ls -l
+  351  cd yaml/
+  352  ls -lrt
+  353  kubectl get pods -o wide
+  354  kubectl get pod webapp -o yaml
+  355  kubectl get pod test -o yaml
+  356  vim mypod.yaml 
+  357  kubectl get pods --show-labels
+  358  clear
+  359  /usr/bin/time -v df -h
+  360  whereis time
+  361  time -v dd if=/dev/zero of=/tmp/bigfile bs=1M count=500
+  362  /usr/bin/time -v dd if=/dev/zero of=/tmp/bigfile bs=1M count=500
+  363  vim burst.yaml 
+  364  kubectl delete pods test
+  365  kubectl get pods
+  366  cat mypod.yaml 
+  367  vim mypod.yaml 
+  368  kubectl get pods
+  369  kubectl apply -f mypod.yaml
+  370  vim mypod.yaml
+  371  kubectl apply -f mypod.yaml
+  372  kubectl get pods -o wide
+  373  vim mypod.yaml
+  374  kubectl apply -f mypod.yaml
+  375  kubectl get pods -o wide
+  376  exit
+  377  clear
+  378  kubectl get pods -o wide
+  379  kubectl delete pods app
+  380  kubectl get pods -o wide
+  381  kubectl apply -f mypod.yaml
+  382  cd yaml/
+  383  kubectl apply -f mypod.yaml
+  384  kubectl get pods -o wide
+  385  curl 172.17.189.77
+  386  kubectl delete pod app
+  387  clear
+  388  ls -l
+  389  cp mypod.yaml defone.yaml
+  390  vim defone.yaml 
+  391  kubectl get pods -o wide
+  392  kubectl apply -f defone.yaml 
+  393  kubectl get deploy
+  394  kubectl describe deployment 
+  395  clear
+  396  kubectl get deployment
+  397  kubectl get rs
+  398  kubectl get pods
+  399  kubectl get rs
+  400  kubectl get deployment
+  401  kubectl get pods -o wide
+  402  kubectl get rs describe nginx-deployment-59bd8cdd74
+  403  kubectl  describe rs nginx-deployment-59bd8cdd74
+  404  kubectl get pods -o wide
+  405  kubectl delete pod nginx-deployment-59bd8cdd74-xpsc9
+  406  kubectl get pods -o wide
+  407  uptime
+  408  kubectl get pods -o wide
+  409  kubectl get service
+  410  vim defone.yaml 
+  411  kubectl apply -f defone.yaml
+  412  kubectl get svc
+  413  kubectl describe svc nginx-deployment-svc 
+  414  curl http://10.108.205.211
+  415  kubectl get pods -o wide
+  416  kubectl get pods -o wide
+  417  curl http://10.108.205.211
+  418  kubectl describe svc nginx-deployment-svc 
+  419  kubectl get ep nginx-deployment-svc 
+  420  history
+  421  cp defone.yaml deftwo.yaml
+  422  vim deftwo.yaml 
+  423  kubectl apply -f deftwo.yaml
+  424  kubectl get deploy
+  425  kubectl get rs
+  426  kubectl get pods -o wide
+  427  kubectl get svc
+  428  vim deftwo.yaml
+  429  kubectl apply -f deftwo.yaml
+  430  kubectl get svc
+  431  kubectl get pods -o wide
+  432  clear
+  433  kubectl get ep apache-deployment-svc 
+  434  kubectl get ep nginx-deployment-svc 
+  435  kubectl describe svc nginx-deployment-svc 
+  436  kubectl describe svc apache-deployment-svc 
+  437  curl http://10.104.215.162
+  438  curl http://10.108.205.211
+  439  kubectl scale deployment nginx-deployment --replicas 5
+  440  kubectl get pods -o wide
+  441  kubectl scale deployment nginx-deployment --replicas 3
+  442  kubectl get pods -o wide
+  443  vim deftwo.yaml
+  444  kubectl get deploy
+  445  kubectl get nodes
+  446  kubectl top nodes
+  447  vim defone.yaml
+  448  kubectl apply -f defone.yaml
+  449  kubectl get deploy
+  450  kubectl get rs
+  451  kubectl get pods
+  452  kubectl delete --help
+  453  kubectl deployment --help
+  454  kubectl get deployment --help
+  455  kubectl options
+  456  kubectl describe deployment
+  457  kubectl delete deploy apache
+  458  kubectl get deploy
+  459  kubectl get rs
+  460  kubectl get pods
+  461  kubectl get svc
+  462  kubectl delete svc apache-deployment-svc 
+  463  kubectl get svc
+  464  kubectl scale deployment nginx-deployment --replicas 5
+  465  kubectl get pods
+  466  kubectl get hpa
+  467  kubectl get deploy
+  468  kubectl scale deployment nginx-deployment --replicas 3
+  469  kubectl get deploy
+  470  kubectl get pods
+  471  kubectl autoscale deployment nginx-deployment --cpu-percent=10 --min=3 --max=10 --dry-run -o yaml
+  472  kubectl autoscale deployment nginx-deployment --cpu-percent=10 --min=3 --max=10 --dry-run -o yaml > myhpa.yaml
+  473  kubectl autoscale deployment nginx-deployment --cpu-percent=10 --min=3 --max=10 --dry-run=client -o yaml > myhpa.yaml
+  474  ls -lrt
+  475  vim myhpa.yaml 
+  476  kubectl apply -f myhpa.yaml 
+  477  vim myhpa.yaml 
+  478  kubectl api-resources | grep -i auto
+  479  vim myhpa.yaml 
+  480  kubectl apply -f myhpa.yaml 
+  481  vim myhpa.yaml 
+  482  kubectl get hpa
+  483  kubectl get svc
+  484  kubectl get hpa
+  485  kubectl get pods
+  486  kubectl get hpa
+  487  kubectl get pods
+  488  kubectl describe hpa my-app
+  489  history
+  490  kubectl get pods
+  491  curl http://10.108.205.211
+  492  while true; do curl http://10.108.205.211 ; done
+  493  kubectl get pods
+  494  kubectl get deploy
+  495  kubectl delete deploy nginx-deployment 
+  496  kubectl get deploy
+  497  kubectl get pods
+  498  cd yaml/
+  499  ls -lrt
+  500  vim application.yaml
+  501  kubectl apply -f application.yaml 
+  502  kubectl get deploy
+  503  kubectl get pods
+  504  ls -lrt
+  505  vim defone.yaml 
+  506  vim application.yaml
+  507  kubectl get pods
+  508  kubectl describe deployment hello-deploy 
+  509  kubectl get svc
+  510  curl http://10.100.91.182
+  511  vim application.yaml
+  512  kubectl rollout history deployment hello-deploy
+  513  kubectl delete -f application.yaml 
+  514  vim application.yaml 
+  515  kubectl apply -f application.yaml
+  516  vim application.yaml 
+  517  kubectl apply -f application.yaml
+  518  kubectl rollout history deployment hello-deploy
+  519  kubectl get svc
+  520  curl http://10.100.234.40
+  521  kubectl get pods
+  522  ll
+  523  ls -l
+  524  vim defone.yaml 
+  525  vim application.yaml 
+  526  kubectl apply -f application.yaml
+  527  kubectl get pods
+  528  kubectl delete -f application.yaml 
+  529  kubectl get pods
+  530  kubectl apply -f application.yaml
+  531  kubectl get pods
+  532  kubectl get svc
+  533  curl http://10.108.34.85
+  534  vim application.yaml 
+  535  kubectl get deploy
+  536  kubectl apply -f application.yaml
+  537  kubectl get deploy
+  538  kubectl get rs
+  539  kubectl get pods
+  540  curl http://10.108.34.85
+  541  kubectl get rs
+  542  kubectl rollout history deployment hello-deploy
+  543  vim application.yaml 
+  544  vim defone.yaml 
+  545  vim application.yaml 
+  546  kubectl apply -f application.yaml 
+  547  kubectl get rs
+  548  kubectl get svc
+  549  curl http://10.108.34.85
+  550  kubectl rollout history deployment hello-deploy
+  551  kubectl delete -f application.yaml 
+  552  mkdir testapp
+  553  cp application.yaml testapp/
+  554  cd testapp/
+  555  vim application.yaml 
+  556  vim service.yaml
+  557  kubectl apply -f application.yaml service.yaml 
+  558  kubectl apply -f application.yaml 
+  559  kubectl apply -f service.yaml 
+  560  kubectl get rs
+  561  kubectl get svc
+  562  curl http://10.107.125.31
+  563  cp application.yaml application-v2.yaml 
+  564  vim application-v2.yaml 
+  565  kubectl apply -f application-v2.yaml 
+  566  vim application-v2.yaml
+  567  kubectl apply -f application-v2.yaml 
+  568  kubectl get deploy
+  569  kubectl get pods
+  570  kubectl get pods --show-labels
+  571  vim service.yaml 
+  572  kubectl apply -f service.yaml 
+  573  kubectl get svc
+  574  curl http://10.107.125.31
+  575  kubectl delete -f application.yaml 
+  576  kubectl get pods
+  577  vim application-v2.yaml 
+  578  vim service.yaml 
+  579  cd ..
+  580  kubectl delete -f testapp/
+  581  kubectl get deploy
+  582  kubectl get svc
+  583  kubectl delete svc nginx-deployment-svc 
+  584  kubectl get svc
+  585  ls -lrt
+  586  cd testapp/
+  587  ls -lrt
+  588  vim service.yaml 
+  589  cd ..
+  590  ls -lrt
+  591  vim calico.yaml 
+  592  cd ..
+  593  ls -lrt
+  594  git clone https://github.com/olisabosun/cka-exam-prep.git
+  595  git add yaml/ scripts/
+  596  git add yaml/ 
+  597  ls -lrt
+  598  cp yaml/ cka-exam-prep/
+  599  cp -r yaml/ cka-exam-prep/
+  600  cp -r scripts/ cka-exam-prep/
+  601  cd cka-exam-prep/
+  602  ls -lrt
+  603  git commit -m " Add yaml and scripts directory"
+  604  git config --global user.email "olisabosun@gmail.com"
+  605  git config --global user.name "Bosun Olisa"
+  606  git commit -m " Add yaml and scripts directory"
+  607  git add yaml/ scripts/
+  608  git commit -m " Add yaml and scripts directory"
+  609  git push
+  610  ls git push origin main
+  611  git push origin main
+  612  cd ..
+  613  ll
+  614  cd yaml/
+  615  kubectl get ns
+  616  kubectl delete ns learning
+  617  kubectl get ns
+  618  clear
+  619  kubectl create ns dev
+  620  kubectl create ns test
+  621  kubectl create ns prod
+  622  kubectl create ns testing --dry-run=client -o yaml > test-namespace.yaml
+  623  vim test-namespace.yaml 
+  624  kubectl apply -f test-namespace.yaml 
+  625  kubectl get ns
+  626  kubectl delete ns testing 
+  627  vim mypod.yaml
+  628  kubectl -n dev apply -f mypod.yaml 
+  629  kubectl get pods
+  630  kubectl get pod
+  631  kubectl -n dev apply -f mypod.yaml 
+  632  kubectl get pods
+  633  kubectl get nodes
+  634  kubectl -n test apply -f mypod.yaml 
+  635  kubectl -n prod apply -f mypod.yaml 
+  636  kubectl get pods -o wide
+  637  kubectl -n dev get pods
+  638  kubectl -n test get pods
+  639  kubectl -n prod get pods
+  640  kubectl -n dev get pods
+  641  exit
+  642  kubectl -n dev get pods
+  643  kubectl -n dev delete pod
+  644  kubectl -n dev delete pod app
+  645  kubectl -n test delete pod app
+  646  kubectl -n prod delete pod app
+  647  cd yaml/
+  648  ls -lrt
+  649  vim mypod.yaml 
+  650  kubectl get pods -o wide
+  651  cd testapp/
+  652  ls -lrt
+  653  vim application
+  654  vim application.yaml 
+  655  cd ..
+  656  kubectl -n prod get pods
+  657  kubectl -n dev apply -f mypod.yaml 
+  658  kubectl get pods -o wide
+  659  kubectl -n dev get pods
+  660  kubectl describe -n dev get pods
+  661  kubectl describe -n dev app
+  662  kubectl describe -n dev ns
+  663  kubectl -n dev get pods
+  664  kubectl -n dev delete app
+  665  kubectl delete -n dev app
+  666  kubectl delete ns dev
+  667  kubectl -n dev get pods
+  668  kubectl get ns
+  669  kubectl delete ns prod
+  670  kubectl delete ns test
+  671  kubectl get ns
+  672  kubectl create ns dev
+  673  kubectl get ns
+  674  vim mypod.yaml
+  675  kubectl -n dev apply -f mypod.yaml 
+  676  kubectl -n dev get pods
+  677  kubectl -n test get pods
+  678  kubectl -n test apply -f mypod.yaml 
+  679  cd yaml/
+  680  kubectl -n test apply -f mypod.yaml
+  681  kubectl create ns test
+  682  kubectl -n test apply -f mypod.yaml
+  683  kubectl -n test get pods
+  684  vim mypod.yaml 
+  685  kubectl -n test apply -f mypod.yaml
+  686  kubectl -n test get pods
+  687  kubectl -n dev apply -f mypod.yaml
+  688  kubectl -n dev get pods
+  689  kubectl -n test get pods
+  690  kubectl describe pod app -n dev
+  691  kubectl get pods -n kube-system | grep calico
+  692  kubectl delete pods -n kube-system -l k8s-app=calico-node
+  693  kubectl get pods -n kube-system -l k8s-app=calico-node -w
+  694  kubectl wait --for=condition=ready pod -l k8s-app=calico-node -n kube-system --timeout=120s
+  695  kubectl delete pod app -n dev --force --grace-period=0
+  696  kubectl -n dev get pods
+  697  kubectl -n dev apply -f mypod.yaml
+  698  kubectl -n dev get pods
+  699  kubectl -n test get pods
+  700  kubectl -n prod get pods
+  701  kubectl -n prod apply -f mypod.yaml
+  702  kubectl create ns prod
+  703  kubectl -n prod apply -f mypod.yaml
+  704  kubectl -n prod get pods
+  705  kubectl describe ns dev
+  706  kubectl get ns --show-labels
+  707  kubectl -n dev create quota dev-quota --hard=cpu=2,memory=3G,pods=5,services=3
+  708  kubectl describe ns dev
+  709  kubectl -n dev get pods
+  710  kubectl -n dev delete pod bestapp
+  711  kubectl -n dev delete pod app
+  712  kubectl -n dev apply -f mypod.yaml 
+  713  vim mypod.yaml 
+  714  kubectl -n dev apply -f mypod.yaml
+  715  kubectl -n dev get pods
+  716  kubectl describe ns dev
+  717  vim application.yaml 
+  718  ll
+  719  vim defone.yaml 
+  720  ls -lrt
+  721  vim test-namespace.yaml 
+  722  vim myhpa.yaml 
+  723  cd testapp/
+  724  ls -lrt
+  725  vim application.yaml 
+  726  cp application.yaml application-v2.yaml
+  727  cp application-v2.yaml ../
+  728  cd ..
+  729  ls -lrt
+  730  cat application-v2.yaml 
+  731  vim application-v2.yaml 
+  732  cd testapp/
+  733  ls -lrt
+  734  vim application.yaml 
+  735  vim application.yaml
+  736  ll
+  737  vim service.yaml 
+  738  cd ..
+  739  ll
+  740  vim deftwo.yaml 
+  741  vim defone.yaml 
+  742  ll
+  743  vim application.yaml 
+  744  kubectl -n dev apply -f application.yaml
+  745  kubectl -n dev get pods
+  746  kubectl describe ns dev
+  747  kubectl -n dev scale deployment hello-deploy --replicas 5
+  748  kubectl -n dev get deployment hello-deploy
+  749  kubectl -n dev get rs hello-deploy-6895d5d887 
+  750  kubectl -n dev describe rs hello-deploy-6895d5d887 
+  751  kubectl -n dev delete -f application.yaml 
+  752  kubectl -n dev delete pod app
+  753  kubectl describe ns dev
+  754  vim dev-limit-range.yaml
+  755  kubectl -n dev apply -f dev-limit-range.yaml
+  756  kubectl describe ns dev
+  757  vm mypod.yaml 
+  758  vim mypod.yaml 
+  759  kubectl -n dev apply -f mypod.yaml
+  760  vim mypod.yaml 
+  761  kubectl -n dev apply -f mypod.yaml
+  762  vim mypod.yaml 
+  763  sudo apt upgrade 
+  764  kubectl get pods
+  765  kubectl get pods -o wide
+  766  kubectl get nodes
+  767  kubectl get ns
+  768  cd yaml/
+  769  ls -lrt
+  770  vim mypod.yaml 
+  771  kubectl get ns
+  772  Kubectl -n dev get pods
+  773  kubectl -n dev get pods
+  774  kubectl -n test get pods
+  775  kubectl -n prod get pods
+  776  kubectl -n dev apply -f mypod.yaml
+  777  vim mypod.yaml
+  778  kubectl -n dev apply -f mypod.yaml
+  779  vim mypod.yaml
+  780  kubectl -n dev get pods
+  781  kubectl describe -n dev app
+  782  kubectl describe -n dev pods
+  783  kubectl -n dev get pods
+  784  kubectl describe ns dev
+  785  cd yaml/
+  786  ls -lrt
+  787  vim dev-limit-range.yaml 
+  788  kubectl -n prod get pods -o wide
+  789  kubectl -n dev get pods -o wide
+  790  kubectl -n dev exec -it bestapp curl http://172.17.189.70
+  791  kubectl -n dev exec -it bestapp -- curl http://172.17.189.70
+  792  kubectl -n dev exec -it app -- curl http://172.17.189.70
+  793  cd yaml/
+  794  ls -lrt
+  795  vim mypod.yaml
+  796  kubectl -n dev apply -f mypod.yaml 
+  797  vim mypod.yaml
+  798  kubectl -n prod apply -f mypod.yaml 
+  799  vim mypod.yaml
+  800  kubectl -n test apply -f mypod.yaml 
+  801  kubectl -n dev get pods
+  802  kubectl -n test get pods
+  803  kubectl -n test get pods --show-labels
+  804  kubectl -n prod get pods --show-labels
+  805  kubectl -n prod get pods -o wide
+  806  kubectl -n dev exec -- curl http://172.17.235.138
+  807  kubectl -n dev exec devone -- curl http://172.17.235.138
+  808  kubectl -n dev exec devone -- curl http://172.17.189.76
+  809  kubectl -n dev exec testone -- curl http://172.17.189.76
+  810  kubectl -n test exec testone -- curl http://172.17.189.76
+  811  kubectl -n prod exec prodone -- curl http://172.17.189.76
+  812  vim prod-network-policy.yaml
+  813  kubectl get ns --show-labels
+  814  vim prod-network-policy.yaml
+  815  kubectl apply -f prod-network-policy.yaml 
+  816  kubectl -n prod describe networkpolicy.networking.k8s.io/prod-network-policy
+  817  kubectl -n get pods -o wide
+  818  kubectl -n prod get pods -o wide
+  819  kubectl -n dev devone -- curl http:172.17.235.138
+  820  kubectl -n dev devone exec -- curl http:172.17.235.138
+  821  kubectl -n dev exec devone -- curl http:172.17.235.138
+  822  kubectl -n dev exec devone -- curl http:172.17.189.76
+  823  kubectl -n dev exec devone -- curl http:172.17.189.138
+  824  kubectl -n dev exec devone -- curl http://172.17.189.138
+  825  kubectl -n dev exec devone -- curl http://172.17.189.76
+  826  kubectl -n dev exec devone -- curl http://172.17.235.138
+  827  kubectl -n test exec testone -- curl http://172.17.235.138
+  828  kubectl -n test exec testone -- curl http://172.17.189.76
+  829  vim prod-network-policy.yaml 
+  830  kubectl apply -f prod-network-policy.yaml 
+  831  kubectl -n prog get networkpolicy
+  832  kubectl -n prod get networkpolicy
+  833  kubectl -n prod describe networkpolicy.networking.k8s.io/prod-network-policy
+  834  kubectl -n test exec testone -- curl http://172.17.189.76
+  835  kubectl -n test exec testone -- curl http://172.17.235.138
+  836  kubectl -n dev exec devone -- curl http://172.17.235.138
+  837  kubectl -n dev exec devtwo -- curl http://172.17.235.138
+  838  vim prod-network-policy.yaml 
+  839  kubectl apply -f prod-network-policy.yaml 
+  840  kubectl -n prod describe networkpolicy.networking.k8s.io/prod-network-policy
+  841  kubectl -n dev exec devone -- curl http://172.17.235.138
+  842  kubectl -n dev exec devtwo -- curl http://172.17.235.138
+  843  kubectl -n dev exec devone -- curl http://172.17.235.138
+  844  kubectl -n test exec testone -- curl http://172.17.235.138
+  845  kubectl -n prod exec testone -- curl http://172.17.235.138
+  846  kubectl -n prod exec prodone -- curl http://172.17.235.138
+  847  kubectl -n dev exec devone -- curl http://172.17.235.138
+  848  kubectl delete -f prod-network-policy.yaml 
+  849  clear
+  850  history
+bosun@manager:~/yaml$ vim prod-network-policy.yaml 
+bosun@manager:~/yaml$ vim prod-network-policy.yaml
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: prod-network-policy
+  namespace: prod
+spec:
+  podSelector:
+    matchLabels:
+      name: prodone
+  policyTypes:
+  - Ingress
+    #  - Egress
+  ingress:
+  - from:
+    #    - ipBlock:
+    #        cidr: 172.17.0.0/16
+    #        except:
+    #        - 172.17.1.0/24
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: dev
+      podSelector:
+        matchLabels:
+          name: devone
+    ports:
+    - protocol: TCP
+      port: 80
+
+
+Daemonsets - application > deployments.
+
+Example : Daemonset that runs fluentd-elastisearch docker image
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd-elasticsearch
+  namespace: kube-system
+  labels:
+    k8s-app: fluentd-logging
+spec:
+  selector:
+    matchLabels:
+      name: fluentd-elasticsearch
+  template:
+    metadata:
+      labels:
+        name: fluentd-elasticsearch
+    spec:
+      tolerations:
+      # these tolerations are to have the daemonset runnable on control plane nodes
+      # remove them if your control plane nodes should not run pods
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: fluentd-elasticsearch
+        image: quay.io/fluentd_elasticsearch/fluentd:v5.0.1
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+      # it may be desirable to set a high priority class to ensure that a DaemonSet Pod
+      # preempts running Pods
+      # priorityClassName: important
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+
+
+ 857  kubectl -n kube-system get ds
+  858  kubectl -n kube-system get pods -o wide
