@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: prod-network-policy
+  namespace: prod
+spec:
+  podSelector: 
+    matchLabels:
+      name: prodone
+  policyTypes:
+  - Ingress
+    #  - Egress
+  ingress:
+  - from:
+    #    - ipBlock:
+    #        cidr: 172.17.0.0/16
+    #        except:
+    #        - 172.17.1.0/24
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: dev
+      podSelector:
+        matchLabels:
+          name: devone
+    ports:
+    - protocol: TCP
+      port: 80
+
+
